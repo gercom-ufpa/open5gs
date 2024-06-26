@@ -20,6 +20,8 @@ mongodb:
     enabled: false
   global:
     storageClass: openebs-hostpath
+  nodeSelector:
+      kubernetes.io/hostname: open5gslocal
 smf:
   enabled: true
   config:
@@ -36,6 +38,8 @@ smf:
       - subnet: 10.45.0.1/16
         dnn: internet
     mtu: 1500
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 upf:
   enabled: true
   config:
@@ -45,8 +49,12 @@ upf:
         dev: ogstun
         createDev: true
         enableNAT: true
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 webui:
   enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 
 # 4G
 hss:
@@ -96,6 +104,8 @@ amf:
             sd: "0x000001"
           - sst: 3  ## MIoT
             sd: "0x000001"
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 ausf:
   enabled: true
   config:
@@ -103,6 +113,8 @@ ausf:
       client:
         scp:
           enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 bsf:
   enabled: true
   config:
@@ -110,6 +122,8 @@ bsf:
       client:
         scp:
           enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 nrf:
   enabled: true
   config:
@@ -117,6 +131,8 @@ nrf:
       - plmn_id:
           mcc: 724
           mnc: 70
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 nssf:
   enabled: true
   config:
@@ -134,6 +150,8 @@ nssf:
       - nrf:
         sst: 3 ## MIoT
         sd: "0x000001"
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 pcf:
   enabled: true
   config:
@@ -143,6 +161,8 @@ pcf:
           enabled: true
   mongodb:
     enabled: false
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 udm:
   enabled: true
   config:
@@ -150,6 +170,8 @@ udm:
       client:
         scp:
           enabled: true
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 udr:
   enabled: true
   config:
@@ -159,7 +181,11 @@ udr:
           enabled: true
   mongodb:
     enabled: false
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
 scp:
   enabled: true
   mongodb:
     enabled: false
+  nodeSelector:
+    kubernetes.io/hostname: open5gslocal
