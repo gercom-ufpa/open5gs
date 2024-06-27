@@ -11,11 +11,13 @@ populate:
   # example of initCommands:
   #  - open5gs-dbctl add 724700000000001 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA
   #  - open5gs-dbctl add_ue_with_apn 724700000000002 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet
-  #  - open5gs-dbctl add_ue_with_slice 724700000000003 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet 1 111111
+   - open5gs-dbctl add_ue_with_slice 724700000000001 465B5CE8B199B49FAA5F0A2EE238A6BC E8ED289DEBA952E4283B54E88E6183CA internet 1 000001
 
 # Common
 mongodb:
   enabled: true
+  image:
+    tag: 7.0.11
   auth:
     enabled: false
   global:
@@ -53,6 +55,11 @@ upf:
     kubernetes.io/hostname: open5gslocal
 webui:
   enabled: true
+  services:
+    http:
+      type: NodePort
+      nodePorts:
+        http: "30999"
   nodeSelector:
     kubernetes.io/hostname: open5gslocal
 

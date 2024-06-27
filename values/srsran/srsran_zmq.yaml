@@ -85,12 +85,12 @@ image:
 
 config:
   amf:
-    hostname: open5gs-amf-ngap
+    hostname: open5gs-amf-ngap.open5gs
     bind_interface: eth0
 
   ru_sdr:
     device_driver: zmq
-    device_args: tx_port=tcp://127.0.0.1:2000,rx_port=tcp://127.0.0.1:2001,id=gnb,base_srate=23.04e6
+    device_args: tx_port=tcp://127.0.0.1:2000,rx_port=tcp://127.0.0.1:2001,id=srs-gnb-0,base_srate=23.04e6
     srate: 23.04
     tx_gain: 75
     rx_gain: 75
@@ -100,12 +100,16 @@ config:
     band: 3
     channel_bandwidth_MHz: 20
     common_scs: 15
-    plmn: "99970"
+    plmn: "72470"
     tac: 1
 
   slicing:
-  - sst: 1
-    sd: 0x111111
+    - sst: 1  ## eMBB
+      sd: 0x000001
+    - sst: 2  ## URLLC
+      sd: 0x000001
+    - sst: 3  ## MIoT
+      sd: 0x000001
 
 ue:
   image:
@@ -127,7 +131,7 @@ ue:
   config:
     opc: 'E8ED289DEBA952E4283B54E88E6183CA'
     k: '465B5CE8B199B49FAA5F0A2EE238A6BC'
-    imsi: '999700000000001'
+    imsi: '724700000000001'
     imei: '353490069873319'
     resources: {}
 
@@ -246,7 +250,8 @@ affinity: {}
 ## @param nodeSelector Node labels for pod assignment. Evaluated as a template.
 ## ref: https://kubernetes.io/docs/user-guide/node-selection/
 ##
-nodeSelector: {}
+nodeSelector:
+  kubernetes.io/hostname: oranstacklocal
 ## srsran container's resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
 ## @param resources.requests [object] The requested resources for the init container
