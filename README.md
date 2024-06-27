@@ -22,9 +22,9 @@ Install the core network with Helm
 helm upgrade --install open5gs -n open5gs --create-namespace oci://registry-1.docker.io/gradiant/open5gs --version 2.2.2 -f ~/open5gs/values/open5gs/open5gs_with_slices.yaml
 ```
 
-> **_NOTE:_** [open5gs_with_slices.yaml](./values/open5gs/open5gs_with_slices.yaml) example file.
+> **_NOTE_**: [open5gs_with_slices.yaml](./values/open5gs/open5gs_with_slices.yaml) example file.
 
-> **_NOTE_** nodeSelector is `kubernetes.io/hostname: open5gslocal`, change it if necessary.
+> **_NOTE_**: nodeSelector is `kubernetes.io/hostname: open5gslocal`, change it if necessary.
 
 The Open5GS GUI will be available at http://[open5gs-node-IP]:30999
 - user: admin
@@ -47,7 +47,7 @@ helm dependency build
 helm upgrade --install gnb-0 -n srsran --create-namespace . -f ~/open5gs/values/srsran/srsran_zmq.yaml
 ```
 
-> **_NOTE_** nodeSelector is `kubernetes.io/hostname: oranstacklocal`, change it if necessary.
+> **_NOTE_**: nodeSelector is `kubernetes.io/hostname: oranstacklocal`, change it if necessary.
 
 Test UE connectivity
 
