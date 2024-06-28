@@ -60,14 +60,6 @@ The following result should appear.
 
 ![UE ping](images/ue-ping.png)
 
-## Add UERANSIM UEs
-
-TODO
-
-## Add OAI UEs
-
-TODO
-
 ## Clean up
 
 ```sh

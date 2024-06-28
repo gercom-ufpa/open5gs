@@ -1,0 +1,121 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.names.fullname" . }}-gtpu
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.services.gtpu.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.services.gtpu.annotations }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.services.gtpu.annotations "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.services.gtpu.type }}
+  {{- if .Values.services.gtpu.sessionAffinity }}
+  sessionAffinity: {{ .Values.services.gtpu.sessionAffinity }}
+  {{- end }}
+  {{- if .Values.services.gtpu.sessionAffinityConfig }}
+  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.services.gtpu.sessionAffinityConfig "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.services.gtpu.clusterIP (eq .Values.services.gtpu.type "ClusterIP") }}
+  clusterIP: {{ .Values.services.gtpu.clusterIP }}
+  {{- end }}
+  {{- if (and (eq .Values.services.gtpu.type "LoadBalancer") (not (empty .Values.services.gtpu.loadBalancerIP))) }}
+  loadBalancerIP: {{ .Values.services.gtpu.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.services.gtpu.type "LoadBalancer") .Values.services.gtpu.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml .Values.services.gtpu.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.services.gtpu.type "LoadBalancer") (eq .Values.services.gtpu.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.services.gtpu.externalTrafficPolicy | quote }}
+  {{- end }}
+  ports:
+    - name: gtpu
+      port: {{ .Values.services.gtpu.ports.gtpu }}
+      protocol: UDP
+      targetPort: gtpu
+      {{- if and (or (eq .Values.services.gtpu.type "NodePort") (eq .Values.services.gtpu.type "LoadBalancer")) (not (empty .Values.services.gtpu.nodePorts.gtpu)) }}
+      nodePort: {{ .Values.services.gtpu.nodePorts.gtpu }}
+      {{- else if eq .Values.services.gtpu.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+    {{- if .Values.services.gtpu.extraPorts }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.services.gtpu.extraPorts "context" $) | nindent 4 }}
+    {{- end }}
+  publishNotReadyAddresses: true
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "common.names.fullname" . }}-uu
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.services.Uu.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.services.Uu.annotations }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.services.Uu.annotations "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.services.Uu.type }}
+  {{- if .Values.services.Uu.sessionAffinity }}
+  sessionAffinity: {{ .Values.services.Uu.sessionAffinity }}
+  {{- end }}
+  {{- if .Values.services.Uu.sessionAffinityConfig }}
+  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.services.Uu.sessionAffinityConfig "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.services.Uu.clusterIP (eq .Values.services.Uu.type "ClusterIP") }}
+  clusterIP: {{ .Values.services.Uu.clusterIP }}
+  {{- end }}
+  {{- if (and (eq .Values.services.Uu.type "LoadBalancer") (not (empty .Values.services.Uu.loadBalancerIP))) }}
+  loadBalancerIP: {{ .Values.services.Uu.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.services.Uu.type "LoadBalancer") .Values.services.Uu.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml .Values.services.Uu.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.services.Uu.type "LoadBalancer") (eq .Values.services.Uu.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.services.Uu.externalTrafficPolicy | quote }}
+  {{- end }}
+  ports:
+    - name: uutx
+      port: {{ .Values.services.Uu.ports.tx }}
+      protocol: TCP
+      targetPort: uutx
+      {{- if and (or (eq .Values.services.Uu.type "NodePort") (eq .Values.services.Uu.type "LoadBalancer")) (not (empty .Values.services.Uu.nodePorts.tx)) }}
+      nodePort: {{ .Values.services.Uu.nodePorts.tx }}
+      {{- else if eq .Values.services.Uu.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+    {{- if .Values.services.Uu.extraPorts }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.services.Uu.extraPorts "context" $) | nindent 4 }}
+    {{- end }}
+    - name: uurx
+      port: {{ .Values.services.Uu.ports.rx }}
+      protocol: TCP
+      targetPort: uurx
+      {{- if and (or (eq .Values.services.Uu.type "NodePort") (eq .Values.services.Uu.type "LoadBalancer")) (not (empty .Values.services.Uu.nodePorts.rx)) }}
+      nodePort: {{ .Values.services.Uu.nodePorts.rx }}
+      {{- else if eq .Values.services.Uu.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+    {{- if .Values.services.Uu.extraPorts }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.services.Uu.extraPorts "context" $) | nindent 4 }}
+    {{- end }}
+  publishNotReadyAddresses: true
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
