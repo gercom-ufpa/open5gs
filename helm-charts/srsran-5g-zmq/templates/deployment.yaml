@@ -87,6 +87,8 @@ spec:
               value: {{ .Values.config.amf.hostname }}
             - name: AMF_BIND_INTERFACE
               value: {{ .Values.config.amf.bind_interface }}
+            - name: UE_HOSTNAME
+              value: {{ .Values.config.ue.hostname }}
             {{- if .Values.extraEnvVars }}
             {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
             {{- end }}
@@ -108,9 +110,6 @@ spec:
               protocol: UDP
             - name: uutx
               containerPort: {{ .Values.containerPorts.uutx }}
-              protocol: TCP
-            - name: uurx
-              containerPort: {{ .Values.containerPorts.uurx }}
               protocol: TCP
           {{- if .Values.customStartupProbe }}
           startupProbe: {{- include "common.tplvalues.render" (dict "value" .Values.customStartupProbe "context" $) | nindent 12 }}
@@ -189,6 +188,15 @@ spec:
             - ue
           securityContext:
             privileged: true
+          ports:
+            - name: uerx
+              containerPort: {{ $.Values.containerPorts.uerx }}
+              protocol: TCP
+          env:
+            - name: ENB_HOSTNAME
+              value: {{ include "common.names.fullname" $ }}-uu
+            - name: ENB_ADDRESS
+              value: bash -c "$(host -4 $ENB_HOSTNAME |awk '/has.*address/{print $NF; exit}')"
           resources: 
             {{ toYaml $.Values.ue.config.resources | indent 10 }}
           volumeMounts:

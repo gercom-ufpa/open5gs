@@ -105,17 +105,5 @@ spec:
     {{- if .Values.services.Uu.extraPorts }}
     {{- include "common.tplvalues.render" (dict "value" .Values.services.Uu.extraPorts "context" $) | nindent 4 }}
     {{- end }}
-    - name: uurx
-      port: {{ .Values.services.Uu.ports.rx }}
-      protocol: TCP
-      targetPort: uurx
-      {{- if and (or (eq .Values.services.Uu.type "NodePort") (eq .Values.services.Uu.type "LoadBalancer")) (not (empty .Values.services.Uu.nodePorts.rx)) }}
-      nodePort: {{ .Values.services.Uu.nodePorts.rx }}
-      {{- else if eq .Values.services.Uu.type "ClusterIP" }}
-      nodePort: null
-      {{- end }}
-    {{- if .Values.services.Uu.extraPorts }}
-    {{- include "common.tplvalues.render" (dict "value" .Values.services.Uu.extraPorts "context" $) | nindent 4 }}
-    {{- end }}
   publishNotReadyAddresses: true
   selector: {{- include "common.labels.matchLabels" . | nindent 4 }}

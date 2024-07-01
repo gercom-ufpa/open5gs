@@ -88,9 +88,12 @@ config:
     hostname: open5gs-amf-ngap.open5gs
     bind_interface: eth0
 
+  ue:
+    hostname: ue-rx
+
   ru_sdr:
     device_driver: zmq
-    device_args: tx_port=tcp://127.0.0.1:2000,rx_port=tcp://127.0.0.1:2001,id=gnb-0,base_srate=23.04e6
+    device_args: tx_port=tcp://0.0.0.0:2000,rx_port=tcp://${UE_IP_ADDR}:2001,id=gnb-0,base_srate=23.04e6
     srate: 23.04
     tx_gain: 75
     rx_gain: 75
@@ -109,7 +112,7 @@ config:
 
 
 ue:
-  numberOfUes: 10
+  numberOfUes: 1
   image:
     registry: docker.io
     repository: gradiant/srsran-4g
@@ -210,7 +213,7 @@ serviceAccount:
 containerPorts:
   gtpu: 2152
   uutx: 2000
-  uurx: 2001
+  uerx: 2001
 ## @param sessionAffinity Control where client requests go, to the same pod or round-robin. Values: ClientIP or None
 ## ref: https://kubernetes.io/docs/user-guide/services/
 ##
@@ -427,6 +430,55 @@ services:
     ##
     nodePorts:
       tx: ""
+      rx: ""
+    ## @param service.externalTrafficPolicy Enable client source IP preservation
+    ## ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+    ##
+    externalTrafficPolicy: Cluster
+    ## @param service.clusterIP %%MAIN_CONTAINER_NAME%% service Cluster IP
+    ## e.g.:
+    ## clusterIP: None
+    ##
+    clusterIP: ""
+    ## @param service.extraPorts Extra ports to expose (normally used with the `sidecar` value)
+    ##
+    extraPorts: []
+    ## @param service.annotations Additional custom annotations for %%MAIN_CONTAINER_NAME%% service
+    ##
+    annotations: {}
+    ## @param service.sessionAffinity Session Affinity for Kubernetes service, can be "None" or "ClientIP"
+    ## If "ClientIP", consecutive client requests will be directed to the same Pod
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+    ##
+    sessionAffinity: None
+    ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+    ## sessionAffinityConfig:
+    ##   clientIP:
+    ##     timeoutSeconds: 300
+    ##
+    sessionAffinityConfig: {}
+  uerx:
+    ## @param service.type Kubernetes Service type
+    ##
+    type: ClusterIP
+    ## @param service.ports.gtpu Service HTTP port
+    ##
+    ports:
+      rx: 2001
+    ## @param service.loadBalancerSourceRanges Restricts access for LoadBalancer (only with `service.type: LoadBalancer`)
+    ## e.g:
+    ## loadBalancerSourceRanges:
+    ##   - 0.0.0.0/0
+    ##
+    loadBalancerSourceRanges: []
+    ## @param service.loadBalancerIP loadBalancerIP for the srsran Service (optional, cloud specific)
+    ## ref: https://kubernetes.io/docs/user-guide/services/#type-loadbalancer
+    loadBalancerIP: ""
+    ## @param service.nodePorts [object] Kubernetes node port
+    ## nodePorts:
+    ##   gtpu: <to set explicitly, choose port between 30000-32767>
+    ##
+    nodePorts:
       rx: ""
     ## @param service.externalTrafficPolicy Enable client source IP preservation
     ## ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip

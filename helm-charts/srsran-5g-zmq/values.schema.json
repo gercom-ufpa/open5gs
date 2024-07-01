@@ -101,9 +101,6 @@
                 },
                 "uutx": {
                     "type": "integer"
-                },
-                "uurx": {
-                    "type": "integer"
                 }
             }
         },
@@ -432,6 +429,54 @@
                                     "type": "integer"
                                 },
                                 "rx": {
+                                    "type": "integer"
+                                }
+                            }
+                        },
+                        "sessionAffinity": {
+                            "type": "string"
+                        },
+                        "sessionAffinityConfig": {
+                            "type": "object"
+                        },
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "uerx": {
+                    "type": "object",
+                    "properties": {
+                        "annotations": {
+                            "type": "object"
+                        },
+                        "clusterIP": {
+                            "type": "string"
+                        },
+                        "externalTrafficPolicy": {
+                            "type": "string"
+                        },
+                        "extraPorts": {
+                            "type": "array"
+                        },
+                        "loadBalancerIP": {
+                            "type": "string"
+                        },
+                        "loadBalancerSourceRanges": {
+                            "type": "array"
+                        },
+                        "nodePorts": {
+                            "type": "object",
+                            "properties": {
+                                "rx": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "ports": {
+                            "type": "object",
+                            "properties": {
+                                "tx": {
                                     "type": "integer"
                                 }
                             }

@@ -18,7 +18,7 @@ serviceAccount:
   name: "oai-nr-ue-sa"
 
 # good to use when pulling images from docker-hub mention 
-imagePullSecrets: 
+imagePullSecrets:
  - name: "regcred"
 
 ## Change these ip-addresses according to your environment
@@ -39,7 +39,7 @@ config:
   dnn: "internet" 
   nssaiSst: "2"                     # configure according to gnb and amf, smf and upf 
   nssaiSd: "0x000001" 
-  useAdditionalOptions: "--sa -E --rfsim -r 106 --numerology 1 -C 3319680000 --nokrnmod --log_config.global_log_options level,nocolor,time" 
+  useAdditionalOptions: "--sa -E --rfsim -r 106 --numerology 1 -C 3319680000 --nokrnmod --log_config.global_log_options level,nocolor,time"
 
 # in case of du change the command   
 #"--sa --rfsim -r 106 --numerology 1 -C 3619200000 --nokrnmod --log_config.global_log_options level,nocolor,time" 

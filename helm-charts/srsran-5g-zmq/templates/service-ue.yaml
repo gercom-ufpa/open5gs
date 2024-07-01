@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ue-rx
+  namespace: {{ .Release.Namespace | quote }}
+  labels: 
+  {{- range $index := until (.Values.ue.numberOfUes | int) }}
+    {{- include "common.labels.standard" $ | nindent 4 }}-ue-{{ $index }}
+  {{- end }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if or .Values.services.uerx.annotations .Values.commonAnnotations }}
+  annotations:
+    {{- if .Values.services.uerx.annotations }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.services.uerx.annotations "context" $) | nindent 4 }}
+    {{- end }}
+    {{- if .Values.commonAnnotations }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- end }}
+spec:
+  type: {{ .Values.services.uerx.type }}
+  {{- if .Values.services.uerx.sessionAffinity }}
+  sessionAffinity: {{ .Values.services.uerx.sessionAffinity }}
+  {{- end }}
+  {{- if .Values.services.uerx.sessionAffinityConfig }}
+  sessionAffinityConfig: {{- include "common.tplvalues.render" (dict "value" .Values.services.uerx.sessionAffinityConfig "context" $) | nindent 4 }}
+  {{- end }}
+  {{- if and .Values.services.uerx.clusterIP (eq .Values.services.uerx.type "ClusterIP") }}
+  clusterIP: {{ .Values.services.uerx.clusterIP }}
+  {{- end }}
+  {{- if (and (eq .Values.services.uerx.type "LoadBalancer") (not (empty .Values.services.uerx.loadBalancerIP))) }}
+  loadBalancerIP: {{ .Values.services.uerx.loadBalancerIP }}
+  {{- end }}
+  {{- if and (eq .Values.services.uerx.type "LoadBalancer") .Values.services.uerx.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges: {{- toYaml .Values.services.uerx.loadBalancerSourceRanges | nindent 4 }}
+  {{- end }}
+  {{- if or (eq .Values.services.uerx.type "LoadBalancer") (eq .Values.services.uerx.type "NodePort") }}
+  externalTrafficPolicy: {{ .Values.services.uerx.externalTrafficPolicy | quote }}
+  {{- end }}
+  ports:
+    - name: uerx
+      port: {{ .Values.services.uerx.ports.rx }}
+      protocol: TCP
+      targetPort: uerx
+      {{- if and (or (eq .Values.services.uerx.type "NodePort") (eq .Values.services.uerx.type "LoadBalancer")) (not (empty .Values.services.uerx.nodePorts.rx)) }}
+      nodePort: {{ .Values.services.uerx.nodePorts.rx }}
+      {{- else if eq .Values.services.uerx.type "ClusterIP" }}
+      nodePort: null
+      {{- end }}
+    {{- if .Values.services.uerx.extraPorts }}
+    {{- include "common.tplvalues.render" (dict "value" .Values.services.uerx.extraPorts "context" $) | nindent 4 }}
+    {{- end }}
+  publishNotReadyAddresses: true
+  selector: {{- include "common.labels.matchLabels" . | nindent 4 }}
